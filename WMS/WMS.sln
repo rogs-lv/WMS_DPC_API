@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMS", "WMS.csproj", "{68B0E658-9883-4D39-A0FB-9EA3CB6C16F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMS.Tests", "..\WMS.Tests\WMS.Tests.csproj", "{35470A95-938E-4302-BD7D-0F2650590091}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMS.Token", "..\WMS.Token\WMS.Token.csproj", "{4A6C6F56-B5A4-466E-8FF9-D1A12C916FA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMS.Models", "..\WMS.Models\WMS.Models.csproj", "{1EB95E81-671C-4AEF-B3BF-E3F77C7EF385}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMS.Entities", "..\WMS.Entities\WMS.Entities.csproj", "{5F3AFF98-C9C4-440E-897C-9FF55F76B646}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMS.DAO", "..\WMS.DAO\WMS.DAO.csproj", "{464E2A40-5F63-45C6-AB82-9FF66DAE6B79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WMS.Utilities", "..\WMS.Utilities\WMS.Utilities.csproj", "{12FF98DC-C9B1-4ED4-997E-9E5ED48BDD55}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68B0E658-9883-4D39-A0FB-9EA3CB6C16F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68B0E658-9883-4D39-A0FB-9EA3CB6C16F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68B0E658-9883-4D39-A0FB-9EA3CB6C16F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68B0E658-9883-4D39-A0FB-9EA3CB6C16F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35470A95-938E-4302-BD7D-0F2650590091}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35470A95-938E-4302-BD7D-0F2650590091}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35470A95-938E-4302-BD7D-0F2650590091}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35470A95-938E-4302-BD7D-0F2650590091}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A6C6F56-B5A4-466E-8FF9-D1A12C916FA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A6C6F56-B5A4-466E-8FF9-D1A12C916FA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A6C6F56-B5A4-466E-8FF9-D1A12C916FA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A6C6F56-B5A4-466E-8FF9-D1A12C916FA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EB95E81-671C-4AEF-B3BF-E3F77C7EF385}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EB95E81-671C-4AEF-B3BF-E3F77C7EF385}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EB95E81-671C-4AEF-B3BF-E3F77C7EF385}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EB95E81-671C-4AEF-B3BF-E3F77C7EF385}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F3AFF98-C9C4-440E-897C-9FF55F76B646}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F3AFF98-C9C4-440E-897C-9FF55F76B646}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F3AFF98-C9C4-440E-897C-9FF55F76B646}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F3AFF98-C9C4-440E-897C-9FF55F76B646}.Release|Any CPU.Build.0 = Release|Any CPU
+		{464E2A40-5F63-45C6-AB82-9FF66DAE6B79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{464E2A40-5F63-45C6-AB82-9FF66DAE6B79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{464E2A40-5F63-45C6-AB82-9FF66DAE6B79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{464E2A40-5F63-45C6-AB82-9FF66DAE6B79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12FF98DC-C9B1-4ED4-997E-9E5ED48BDD55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12FF98DC-C9B1-4ED4-997E-9E5ED48BDD55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12FF98DC-C9B1-4ED4-997E-9E5ED48BDD55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12FF98DC-C9B1-4ED4-997E-9E5ED48BDD55}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0225F91C-B160-48E8-88C4-168DA948D48E}
+	EndGlobalSection
+EndGlobal
