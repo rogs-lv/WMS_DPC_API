@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Sap.Data.Hana;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -58,24 +59,19 @@ namespace WMS.DAO.Service
                 {
                     foreach (ModuleResponse mod in modules)
                     {
-                        int resultModulos = connection.Execute($"{schema}.\"WMS_CreateProfiles_Modules\"(opt=>{3}, idUser=>'{profile.IdUser}', idModule=>'{mod.IdModule}');");
+                        int resultModulos = connection.Execute($"{schema}.\"WMS_CreateProfiles_Modules\"(opt=>{3}, idUser=>'{profile.IdUser}', idModule=>'{mod.IdModule}', statusMod=>'{(mod.Status ? 'A' : 'I')}');");
                     }
-                    foreach (AdditionalSettings sett in configurations) { 
-                        int additionalConfRow = connection.Execute($"{schema}.\"WMS_CreateProfiles_Modules\"(opt=>{4}, idUser=>'{profile.IdUser}', idConfig=>'{sett.IdConfig}');");
+                    foreach (AdditionalSettings sett in configurations) {
+                        int additionalConfRow = connection.Execute($"{schema}.\"WMS_CreateProfiles_Modules\"(opt=>{4}, idUser=>'{profile.IdUser}', idConfig=>'{sett.IdConfig}', statusConfig=>'{(sett.Status ? 'A' : 'I')}');");
                     }
-                }
-                return new Response<string>($"Usuario {profile.IdUser} creado", 0, "");
+                }                
+                return new Response<string>($"Usuario: {profile.IdUser} creado", 0, "");
             }
             catch (Exception ex)
             {
                 lg.Registrar(ex, this.GetType().FullName);
                 return new Response<string>($"", -1, ex.Message);
             }
-        }
-
-        public bool UpdateProfile(Profile profile, List<ModuleResponse> modules, AdditionalSettings configurations)
-        {
-            throw new NotImplementedException();
         }
         
         public List<ModuleUser> GetModulesUser(string userId)
@@ -129,7 +125,7 @@ namespace WMS.DAO.Service
             IDbConnection connection = dBAdapter.GetConnection();
             try
             {
-                var validId = connection.Query<bool>($"{schema}.\"WMS_ValidIduser\"(leadId=>{leadIdUser});").First();
+                var validId = connection.Query<bool>($"{schema}.\"WMS_ValidIduser\"(leadId=>'{leadIdUser}');").First();
                 return validId;
             }
             catch (Exception ex)
@@ -144,6 +140,31 @@ namespace WMS.DAO.Service
                     connection.Close();
                     connection.Dispose();
                 }
+            }
+        }
+
+        public Response<string> UpdateProfile<T>(Profile profile, List<ModuleResponse> modules, List<AdditionalSettings> configurations)
+        {
+            IDbConnection connection = dBAdapter.GetConnection();
+            try
+            {
+                string passEncrypt = !string.IsNullOrEmpty(profile.Password) ? encry.EncryptPassword(profile.Password) : "";
+                int result = connection.Execute($"{schema}.\"WMS_UpdateProfiles_Modules\"(opt=>{1}, idUser=>'{profile.IdUser}', nameUser=>'{profile.NameUser}', status=>'{(profile.Status ? 'A' : 'I')}', pass=>'{passEncrypt}', warehouse=>'{profile.WhsCode}');");
+                if (result > 0) {
+                    foreach (ModuleResponse mod in modules) {
+                        int updateModule = connection.Execute($"{schema}.\"WMS_UpdateProfiles_Modules\"(opt=>{2}, idUser=>'{profile.IdUser}', idModule=>'{mod.IdModule}', statusMod=>'{(mod.Status ? 'A' : 'I')}');");
+                    }
+                    foreach (AdditionalSettings sett in configurations)
+                    {
+                        int updateSettings = connection.Execute($"{schema}.\"WMS_UpdateProfiles_Modules\"(opt=>{3}, idUser=>'{profile.IdUser}', idConfig=>'{sett.IdConfig}', statusConfig=>'{(sett.Status ? 'A' : 'I')}');");
+                    }
+                }
+                return new Response<string>($"Usuario: {profile.IdUser} actualizado", 0, "");
+            }
+            catch (Exception ex)
+            {
+                lg.Registrar(ex, this.GetType().FullName);
+                return new Response<string>($"", -1, ex.Message);
             }
         }
     }

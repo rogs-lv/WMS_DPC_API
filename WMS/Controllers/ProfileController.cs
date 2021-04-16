@@ -46,9 +46,8 @@ namespace WMS.Controllers
         [ResponseType(typeof(Response<string>))]
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         public IHttpActionResult CreateProfile([FromBody] ProfileRequest profile) { 
-        //public IHttpActionResult CreateProfile([FromBody] Profile profile, [FromBody] AdditionalSettings configurations, [FromBody] List<ModuleResponse> modules) {
             if(string.IsNullOrEmpty(profile.UserProfile.Password) || string.IsNullOrEmpty(profile.UserProfile.NameUser) || string.IsNullOrEmpty(profile.UserProfile.IdUser))
-                return Content(HttpStatusCode.OK, new Response<string>("", -1, $"No ingreso los campos marcados como obligatorios"));
+                return Content(HttpStatusCode.OK, new Response<string>("Faltan campos obligatorios", -1, $"No ingreso los campos marcados como obligatorios"));
 
             var response = profileService.CreateNewProfile<string>(profile.UserProfile, profile.UserModules, profile.UserAdditionalSettings);
             return Content(HttpStatusCode.OK, response);
@@ -56,10 +55,13 @@ namespace WMS.Controllers
 
         [HttpPatch]
         [Route("UpdateProfile")]
-        [ResponseType(typeof(bool))]
+        [ResponseType(typeof(Response<string>))]
         [EnableCors(origins: "*", headers: "*", methods: "*")]
-        public IHttpActionResult UpdateProfile() {
-            return null;
+        public IHttpActionResult UpdateProfile([FromBody] ProfileRequest profile) {
+            if (string.IsNullOrEmpty(profile.UserProfile.WhsCode) || string.IsNullOrEmpty(profile.UserProfile.NameUser) || string.IsNullOrEmpty(profile.UserProfile.IdUser))
+                return Content(HttpStatusCode.OK, new Response<string>("Faltan campos obligatorios", -1, $"No ingreso los campos marcados como obligatorios"));
+            var response = profileService.UpdateProfile<string>(profile.UserProfile, profile.UserModules, profile.UserAdditionalSettings);
+            return Ok(response);
         }
 
         [HttpGet]

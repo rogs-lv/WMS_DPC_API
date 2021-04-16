@@ -12,7 +12,7 @@ namespace WMS.DAO.IService
     {
         List<Profile> GetProfiles();
         Response<string> CreateNewProfile<T>(Profile profile, List<ModuleResponse> modules, List<AdditionalSettings> configurations);
-        bool UpdateProfile(Profile profile, List<ModuleResponse> modules, AdditionalSettings configurations);
+        Response<string> UpdateProfile<T>(Profile profile, List<ModuleResponse> modules, List<AdditionalSettings> configurations);
         List<ModuleUser> GetModulesUser(string userId);
         List<Warehouse> GetWarehouse();
     }

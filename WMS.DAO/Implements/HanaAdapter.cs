@@ -33,6 +33,7 @@ namespace WMS.DAO.Implements
                 return null;
             }
         }
+
         private string CreateConnectionString()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["HanaServer"].ConnectionString;
