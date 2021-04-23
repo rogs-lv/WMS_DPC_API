@@ -7,38 +7,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WMS.DAO.IService;
-using WMS.Entities;
 using WMS.Models;
 using WMS.Utilities;
 
 namespace WMS.DAO.Service
 {
-    public class ConfigurationService : IConfigurationService
+    public class QualityService : ValidationService, IQualityService, IReadCodebars
     {
         IDBAdapter dBAdapter;
         Log lg;
         private readonly string schema;
-        //private readonly string filterModule;
-        public ConfigurationService()
+
+        public QualityService()
         {
             dBAdapter = DBFactory.GetDefaultAdapater();
             lg = Log.getIntance();
             schema = ConfigurationManager.AppSettings["schema"];
-            //filterModule = "TRAN";
         }
-        public List<ModulesHome> GetModulesUser(string userId)
+
+        public List<Warehouse> WarehouseQuality(string warehouse)
         {
             IDbConnection connection = dBAdapter.GetConnection();
-            List<ModuleResponse> listModules = new List<ModuleResponse>();
             try
             {
-                var module = connection.Query<ModulesHome>($"{schema}.\"WMS_Module\"( user_ => '{userId}');").ToList();
-                return module;
+                var listWhsQuality = connection.Query<Warehouse>($"{schema}.\"WMS_WhsQuality\"( warehouse => '{warehouse}');").ToList();
+                return listWhsQuality;
             }
             catch (Exception ex)
             {
                 lg.Registrar(ex, this.GetType().FullName);
-                return null;
+                return new List<Warehouse>();
             }
             finally
             {
@@ -49,18 +47,17 @@ namespace WMS.DAO.Service
                 }
             }
         }
-        public List<AdditionalSettings> GetAdditionalSettings(string userId)
-        {
+
+        public bool CheckSameStatus(string codebars, int status) {
             IDbConnection connection = dBAdapter.GetConnection();
             try
             {
-                var aditionalModule = connection.Query<AdditionalSettings>($"{schema}.\"WMS_ConfigurationAditional\"( user_ => '{userId}');").ToList();
-                return aditionalModule;
+                return validSameStatusBatch(connection, schema, status, codebars);                
             }
             catch (Exception ex)
             {
                 lg.Registrar(ex, this.GetType().FullName);
-                return null;
+                return false;
             }
             finally
             {
@@ -71,18 +68,19 @@ namespace WMS.DAO.Service
                 }
             }
         }
-        public ModulesHome VerifyPath(string userId, string path) {
+
+        public List<Batch> ReadCode(string codebars, string warehouse, int status)
+        {
             IDbConnection connection = dBAdapter.GetConnection();
-            List<ModuleResponse> listModules = new List<ModuleResponse>();
             try
             {
-                var module = connection.Query<ModulesHome>($"{schema}.\"WMS_VerifyPath\"(path => '{path}', user_ => '{userId}');").FirstOrDefault();
-                return module;
+                List<Batch> listBatchs = connection.Query<Batch>($"{schema}.\"WMS_BatcNumber\"(batch=>'{codebars}', warehouse=> '{warehouse}');").ToList();
+                return listBatchs;
             }
             catch (Exception ex)
             {
                 lg.Registrar(ex, this.GetType().FullName);
-                return null;
+                return new List<Batch>();
             }
             finally
             {

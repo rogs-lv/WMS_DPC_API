@@ -66,6 +66,8 @@ namespace WMS.App_Start
             kernel.Bind<IAuthenticateService>().To<AuthenticateService>();
             kernel.Bind<IConfigurationService>().To<ConfigurationService>();
             kernel.Bind<IProfileService>().To<ProfileService>();
+            kernel.Bind<IQualityService>().To<QualityService>();
+            kernel.Bind<IReadCodebars>().To<QualityService>();
         }
     }
 }

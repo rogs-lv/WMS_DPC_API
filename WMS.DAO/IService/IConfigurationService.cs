@@ -10,7 +10,8 @@ namespace WMS.DAO.IService
 {
     public interface IConfigurationService
     {
-        List<ModuleResponse> GetModulesUser(string userId);
+        List<ModulesHome> GetModulesUser(string userId);
         List<AdditionalSettings> GetAdditionalSettings(string userId);
+        ModulesHome VerifyPath(string userId, string path);
     }
 }

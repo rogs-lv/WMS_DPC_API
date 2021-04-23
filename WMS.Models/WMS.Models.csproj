@@ -65,6 +65,7 @@
     <Compile Include="AuthenticateRequest.cs" />
     <Compile Include="AuthenticateResponse.cs" />
     <Compile Include="AdditionalSettings.cs" />
+    <Compile Include="Batch.cs" />
     <Compile Include="HanaConnectResponse.cs" />
     <Compile Include="ModuleResponse.cs" />
     <Compile Include="ProfileRequest.cs" />
