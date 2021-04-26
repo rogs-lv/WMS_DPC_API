@@ -13,5 +13,6 @@ namespace WMS.DAO.IService
         List<ModulesHome> GetModulesUser(string userId);
         List<AdditionalSettings> GetAdditionalSettings(string userId);
         ModulesHome VerifyPath(string userId, string path);
+        int Serie(string warehouse);
     }
 }

@@ -91,5 +91,30 @@ namespace WMS.DAO.Service
                 }
             }
         }
+        public DefaultLocationWhs DefaulLocationWarehouse(string warehouse)
+        {
+            IDbConnection connection = dBAdapter.GetConnection();
+            try
+            {
+                DefaultLocationWhs defaultLocation = connection.Query<DefaultLocationWhs>($"{schema}.\"WMS_BinDeftWarehouse\"(warehouse=>'{warehouse}');").FirstOrDefault();
+                if (defaultLocation == null)
+                    return new DefaultLocationWhs();
+                else
+                    return defaultLocation;
+            }
+            catch (Exception ex)
+            {
+                lg.Registrar(ex, this.GetType().FullName);
+                return new DefaultLocationWhs();
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    connection.Close();
+                    connection.Dispose();
+                }
+            }
+        }
     }
 }

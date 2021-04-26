@@ -22,6 +22,7 @@ namespace WMS.Controllers
             qualityService = quality;
             readService = readCodebars;
         }
+        
         [HttpGet]
         [Route("WarehouseQuality")]
         [ResponseType(typeof(Response<string>))]
@@ -35,6 +36,7 @@ namespace WMS.Controllers
             var response = qualityService.WarehouseQuality(whsCode);
             return Ok(new Response<List<Warehouse>>(response, 0, ""));
         }
+        
         [HttpGet]
         [Route("BatchNumber")]
         [ResponseType(typeof(Response<bool>))]
@@ -54,6 +56,15 @@ namespace WMS.Controllers
             }
             else 
                 return Ok(new Response<bool>(true, -1, "El lote ya se encuentra actualizado"));
+        }
+
+        [HttpGet]
+        [Route("DefaultLocationWarehouse")]
+        [ResponseType(typeof(Response<DefaultLocationWhs>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public IHttpActionResult DefaultLocationWarehouse([FromUri] string warehouse) {
+            var response = qualityService.DefaulLocationWarehouse(warehouse);
+            return Ok(new Response<DefaultLocationWhs>(response, 0, ""));
         }
     }
 }

@@ -57,5 +57,15 @@ namespace WMS.Controllers
             var response = configurationService.VerifyPath(userId, path);
             return Ok(new Response<ModulesHome>(response, 0,""));
         }
+
+        [HttpGet]
+        [Route("Serie")]
+        [ResponseType(typeof(Response<int>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public IHttpActionResult Serie([FromUri] string warehouse)
+        {
+            var response = configurationService.Serie(warehouse);
+            return Ok(new Response<int>(response, 0, ""));
+        }
     }
 }

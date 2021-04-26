@@ -93,5 +93,26 @@ namespace WMS.DAO.Service
                 }
             }
         }
+        public int Serie(string warehouse) {
+            IDbConnection connection = dBAdapter.GetConnection();
+            try
+            {
+                var numberSerie = connection.Query<int>($"{schema}.\"WMS_Series\"(warehouse => '{warehouse}');").First();
+                return numberSerie;
+            }
+            catch (Exception ex)
+            {
+                lg.Registrar(ex, this.GetType().FullName);
+                return 0;
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    connection.Close();
+                    connection.Dispose();
+                }
+            }
+        }
     }
 }

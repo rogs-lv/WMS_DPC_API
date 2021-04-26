@@ -11,5 +11,6 @@ namespace WMS.DAO.IService
     {
         List<Warehouse> WarehouseQuality(string warehouse);
         bool CheckSameStatus(string codebars, int status);
+        DefaultLocationWhs DefaulLocationWarehouse(string warehouse);
     }
 }
