@@ -68,6 +68,7 @@ namespace WMS.App_Start
             kernel.Bind<IProfileService>().To<ProfileService>();
             kernel.Bind<IQualityService>().To<QualityService>();
             kernel.Bind<IReadCodebars>().To<QualityService>();
+            kernel.Bind<IFolioService>().To<FolioService>();
         }
     }
 }

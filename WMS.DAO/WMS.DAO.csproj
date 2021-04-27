@@ -58,6 +58,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -71,6 +72,7 @@
     <Compile Include="Implements\HanaAdapter.cs" />
     <Compile Include="IService\IAuthenticateService.cs" />
     <Compile Include="IService\IConfigurationService.cs" />
+    <Compile Include="IService\IFolioService.cs" />
     <Compile Include="IService\IHanaConnectService.cs" />
     <Compile Include="IService\IProfileService.cs" />
     <Compile Include="IService\IQualityService.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AuthenticateService.cs" />
     <Compile Include="Service\ConfigurationService.cs" />
+    <Compile Include="Service\FolioService.cs" />
     <Compile Include="Service\HanaConnectService.cs" />
     <Compile Include="Service\ProfileService.cs" />
     <Compile Include="Service\QualityService.cs" />
