@@ -11,4 +11,11 @@ namespace WMS.Models
         public string WhsCode { get; set; }
         public string WhsName { get; set; }
     }
+
+    public class WarehouseLocation
+    {
+        public string DftBinAbs { get; set; }
+        public string BinCode { get; set; }
+        public string DftBinEnfd { get; set; }
+    }
 }

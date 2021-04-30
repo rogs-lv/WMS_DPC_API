@@ -74,6 +74,7 @@
     <Compile Include="IService\IConfigurationService.cs" />
     <Compile Include="IService\IFolioService.cs" />
     <Compile Include="IService\IHanaConnectService.cs" />
+    <Compile Include="IService\IInventoryService.cs" />
     <Compile Include="IService\IProfileService.cs" />
     <Compile Include="IService\IQualityService.cs" />
     <Compile Include="IService\IReadCodebars.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Service\ConfigurationService.cs" />
     <Compile Include="Service\FolioService.cs" />
     <Compile Include="Service\HanaConnectService.cs" />
+    <Compile Include="Service\InventoryService.cs" />
     <Compile Include="Service\ProfileService.cs" />
     <Compile Include="Service\QualityService.cs" />
     <Compile Include="Service\ValidationService.cs" />

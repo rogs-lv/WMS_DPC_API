@@ -71,9 +71,7 @@ namespace WMS.DAO.Service
 
                 if (!File.Exists(pathFull)) //If not exist, create
                 {
-                    
-                        File.WriteAllLines(pathFull, batchs); 
-                    
+                    File.WriteAllLines(pathFull, batchs);    
                 }
                 
                 return new Response<bool>(true, 0, "Archivo creado correctamente"); ;

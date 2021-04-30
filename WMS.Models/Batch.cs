@@ -18,4 +18,16 @@ namespace WMS.Models
         public string WhsCode { get; set; }
         public int Status { get; set; }
     }
+    public class BatchsInLocation
+    {
+        public string DistNumber { get; set; }
+        public string BinCode { get; set; }
+        public int AbsEntry { get; set; }
+        public string ItemCode { get; set; }
+        public string ItemName { get; set; }
+        public decimal Quantity { get; set; }
+        public string WhsCode { get; set; }
+        public int U_TarimasMax { get; set; }
+    }
+
 }
