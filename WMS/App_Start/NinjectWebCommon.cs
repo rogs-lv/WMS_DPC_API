@@ -70,6 +70,7 @@ namespace WMS.App_Start
             kernel.Bind<IReadCodebars>().To<QualityService>();
             kernel.Bind<IFolioService>().To<FolioService>();
             kernel.Bind<IInventoryService>().To<InventoryService>();
+            kernel.Bind<ITransferService>().To<TransferService>();
         }
     }
 }

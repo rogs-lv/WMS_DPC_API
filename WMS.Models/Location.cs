@@ -13,4 +13,12 @@ namespace WMS.Models
         public int U_TarimasMax { get; set; }
         public int Tarimas { get; set; }
     }
+
+    public class AvailableLocation
+    {
+        public string BinCode { get; set; }
+        public int DftBinAbs { get; set; }
+        public int U_TarimasMax { get; set; }
+        public int Tarimas { get; set; }
+    }
 }

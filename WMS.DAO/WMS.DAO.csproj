@@ -78,6 +78,7 @@
     <Compile Include="IService\IProfileService.cs" />
     <Compile Include="IService\IQualityService.cs" />
     <Compile Include="IService\IReadCodebars.cs" />
+    <Compile Include="IService\ITransferService.cs" />
     <Compile Include="IService\IValidationsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AuthenticateService.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Service\InventoryService.cs" />
     <Compile Include="Service\ProfileService.cs" />
     <Compile Include="Service\QualityService.cs" />
+    <Compile Include="Service\TransferService.cs" />
     <Compile Include="Service\ValidationService.cs" />
     <Compile Include="Utility\Encrypt.cs" />
   </ItemGroup>
