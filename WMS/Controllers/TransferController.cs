@@ -16,13 +16,11 @@ namespace WMS.Controllers
     public class TransferController : ApiController
     {
         private readonly ITransferService transferService;
-        private readonly IReadCodebars readService;
-        public TransferController(ITransferService transfer, IReadCodebars read)
+        public TransferController(ITransferService transfer)
         {
             transferService = transfer;
-            readService = read;
         }
-
+        #region location movement
         [HttpGet]
         [Route("ViewLocation")]
         [ResponseType(typeof(Response<List<BatchsInLocation>>))]
@@ -51,7 +49,28 @@ namespace WMS.Controllers
             var response = transferService.AbsEntryFromBinCode(warehouse, bincode);
             return Ok(new Response<Location>(response, 0, ""));
         }
+        #endregion
+        #region transfer request
+        [HttpGet]
+        [Route("OpenTransferRequest")]
+        [ResponseType(typeof(Response<List<OpenTransferRequest>>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public IHttpActionResult OpenTransferRequest([FromUri] string warehouseUser) {
+            var response = transferService.OpenTransfersRequests(warehouseUser);
+            return Ok(new Response<List<OpenTransferRequest>>(response, 0, ""));
+        }
 
+        [HttpGet]
+        [Route("GetDocumentRequest")]
+        [ResponseType(typeof(Response<DocumentTransfer>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public IHttpActionResult GetDocumentRequest([FromUri] string warehouseUser, string numberDocument)
+        {
+            var response = transferService.GetDocumentRequest(warehouseUser, numberDocument);
+            return Ok(new Response<DocumentTransfer>(response, 0, ""));
+        }
+        #endregion
+        #region common
         [HttpGet]
         [Route("BatchNumber")]
         [ResponseType(typeof(Response<bool>))]
@@ -61,11 +80,28 @@ namespace WMS.Controllers
             if (string.IsNullOrEmpty(codebars))
                 return Ok(new Response<bool>(false, -1, "El codigo de barras es obligatorio"));
 
-            var response = readService.ReadCode(codebars, warehouse);
+            var response = transferService.ReadCode(codebars, warehouse);
             if (response.Count > 0)
                 return Ok(new Response<List<Batch>>(response, 0, ""));
             else
                 return Ok(new Response<List<Batch>>(response, -1, $"No se encontro información del lote: {codebars}"));
         }
+        [HttpGet]
+        [Route("LocationWarehouse")]
+        [ResponseType(typeof(Response<DefaultLocationWhs>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public IHttpActionResult LocationWarehouse([FromUri] string warehouse) {
+            var response = transferService.LocationWarehouse(warehouse);
+            return Ok(new Response<DefaultLocationWhs>(response, 0, ""));
+        }
+        [HttpPost]
+        [Route("ProcessMovement")]
+        [ResponseType(typeof(Response<Transfer>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public IHttpActionResult ProcessMovement([FromBody] DataMovement data) {
+            var response = transferService.ProcessMovement(data.batchs, data.request);
+            return Ok(response);
+        }
+        #endregion
     }
 }
