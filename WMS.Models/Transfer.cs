@@ -14,7 +14,6 @@ namespace WMS.Models
         public decimal Quantity { get; set; }
         public int SerialAndBatchNumbersBaseLine { get; set; }        
     }
-
     public class BatchNumbers
     {
         public string BatchNumber { get; set; }
@@ -86,10 +85,34 @@ namespace WMS.Models
         public TransferRequest Document { get; set; }
         public List<DetailTransferRequest> Detail { get; set; }
     }
-
     public class DataMovement
     {
         public List<Batch> batchs { get; set; }
         public DocumentTransfer request { get; set; }
+    }
+    public class TransferReceipt
+    {
+        public int DocEntry { get; set; }
+        public int DocNum { get; set; }
+        public DateTime DocDate { get; set; }
+        public string Filler { get; set; }
+        public string ToWhsCode { get; set; }
+        public string U_Destino { get; set; }
+    }
+    public class DetailTransferReceipt
+    {
+        public int LineNum { get; set; }
+        public string ItemCode { get; set; }
+        public decimal Quantity { get; set; }
+    }
+    public class DocumentTransferReceipt
+    {
+        public TransferReceipt Document { get; set; }
+        public List<DetailTransferReceipt> DetailDocument { get; set; }
+    }
+    public class DataReceipt
+    {
+        public List<Batch> batchs { get; set; }
+        public DocumentTransferReceipt receipt { get; set; }
     }
 }

@@ -70,6 +70,27 @@ namespace WMS.Controllers
             return Ok(new Response<DocumentTransfer>(response, 0, ""));
         }
         #endregion
+        #region transfer receipt
+        [HttpGet]
+        [Route("TransferReceipt")]
+        [ResponseType(typeof(Response<DocumentTransferReceipt>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public IHttpActionResult TransferReceipt([FromUri] string warehouse, [FromUri] int docNum)
+        {
+            var response = transferService.GetDocumentReceipt(warehouse, docNum);
+            return Ok(new Response<DocumentTransferReceipt>(response, 0, ""));
+        }
+        
+        [HttpPost]
+        [Route("ProcessReceipt")]
+        [ResponseType(typeof(Response<Transfer>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public IHttpActionResult ProcessReceipt([FromBody] DataReceipt data)
+        {
+            var response = transferService.ProcessReceipt(data.batchs, data.receipt);
+            return Ok(response);
+        }
+        #endregion
         #region common
         [HttpGet]
         [Route("BatchNumber")]
@@ -86,6 +107,7 @@ namespace WMS.Controllers
             else
                 return Ok(new Response<List<Batch>>(response, -1, $"No se encontro información del lote: {codebars}"));
         }
+        
         [HttpGet]
         [Route("LocationWarehouse")]
         [ResponseType(typeof(Response<DefaultLocationWhs>))]
@@ -94,6 +116,7 @@ namespace WMS.Controllers
             var response = transferService.LocationWarehouse(warehouse);
             return Ok(new Response<DefaultLocationWhs>(response, 0, ""));
         }
+        
         [HttpPost]
         [Route("ProcessMovement")]
         [ResponseType(typeof(Response<Transfer>))]

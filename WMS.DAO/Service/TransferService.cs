@@ -149,6 +149,70 @@ namespace WMS.DAO.Service
             }
         }
         #endregion
+        #region transfer receipt
+        public DocumentTransferReceipt GetDocumentReceipt(string warehouse, int docnum) {
+            IDbConnection connection = dBAdapter.GetConnection();
+            SqlMapper.GridReader mult;
+            try
+            {
+                DocumentTransferReceipt document = new DocumentTransferReceipt();
+                mult = connection.QueryMultiple($"{schema}.\"WMS_GetTransferReceipt\"(warehouse => '{warehouse}', docNum => {docnum});");
+                
+                document.Document = mult.Read<TransferReceipt>().FirstOrDefault();
+                document.DetailDocument = mult.Read<DetailTransferReceipt>().ToList();
+                return document;
+            }
+            catch (Exception ex)
+            {
+                lg.Registrar(ex, this.GetType().FullName);
+                return new DocumentTransferReceipt();
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    connection.Close();
+                    connection.Dispose();
+                }
+            }
+        }
+        public Response<Transfer> ProcessReceipt(List<Batch> batchs, DocumentTransferReceipt receipt) {
+            IDbConnection connection = dBAdapter.GetConnection();
+            Guid guid;
+            try
+            {
+                DefaultLocationWhs defaultLocation = connection.Query<DefaultLocationWhs>($"{schema}.\"WMS_BinDeftWarehouse\"(warehouse=>'{receipt.Document.U_Destino}');").FirstOrDefault();
+                guid = Guid.NewGuid();
+                int rowExecute = 0;
+                foreach (Batch row in batchs)
+                {
+                    rowExecute = connection.Execute(
+                        $"{schema}.\"WMS_SaveMovement\"(" +
+                        $"ItemCode=>'{row.ItemCode}',From_=>'{row.WhsCode}',To_=>'{(receipt.Document.U_Destino)}'" +
+                        $",Batch=>'{row.DistNumber}',WhsBatch=>'{row.WhsCode}',FromLocation=>''" +
+                        $",ToLocation=>'{(defaultLocation != null ? defaultLocation.DftBinAbs.ToString() : "")}',QToLocation=>{row.Quantity},IdGUID=>'{guid.ToString()}')");
+
+                }
+                if (rowExecute > 0)
+                    return new Response<Transfer>(BuildReceipt(guid.ToString(), receipt, connection), 0, "");
+                else
+                    return new Response<Transfer>(null, -1, "No se se procesaron registros para el documento");
+            }
+            catch (Exception ex)
+            {
+                lg.Registrar(ex, this.GetType().FullName);
+                return new Response<Transfer>(null, -1, ex.Message);
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    connection.Close();
+                    connection.Dispose();
+                }
+            }
+        }
+        #endregion
         #region common
         public List<Batch> ReadCode(string codebars, string warehouse)
         {
@@ -232,6 +296,75 @@ namespace WMS.DAO.Service
                 }
             }
         }
+        private Transfer BuildReceipt(string guid, DocumentTransferReceipt receipt, IDbConnection connection)
+        {
+            try
+            {
+                Transfer document = new Transfer();
+
+                document.Series = 0;
+                document.DocDate = DateTime.Now.ToString("yyyy-MM-dd");
+                document.FromWarehouse = receipt.Document.ToWhsCode;
+                document.ToWarehouse = receipt.Document.U_Destino;
+                document.U_Destino = "";
+                document.U_OrigenMov = "HH";
+                document.U_UsrHH = "";
+                document.U_FechaMov = DateTime.Now.ToString("yyyy-MM-dd");
+                document.U_HoraMov = DateTime.Now.ToString("HH:mm:ss");
+                //Lines
+                foreach (var line in GetLines(connection, guid))
+                {
+                    TransferLine row = new TransferLine();
+                    row.ItemCode = line.ItemCode;
+                    row.Quantity = line.Quantity;
+                    row.FromWarehouseCode = line.From;
+                    row.WarehouseCode = line.To;
+                    document.StockTransferLines.Add(row);
+
+                    foreach (var batch in GetBatchs(connection, guid, line.ItemCode, line.LineNum))
+                    {
+                        BatchNumbers distNumber = new BatchNumbers();
+                        distNumber.BatchNumber = batch.Batch;
+                        distNumber.Location = line.From;
+                        distNumber.Quantity = batch.Quantity;
+                        distNumber.BaseLineNumber = line.LineNum;
+                        row.BatchNumbers.Add(distNumber);
+                        foreach (var from_ in GetLocations(connection, guid, line.ItemCode, line.LineNum, batch.LineNumBatch, batch.Batch, 2))
+                        {
+                            if (from_.FromLocation > 0)
+                            {
+                                BinLocation FromLocation = new BinLocation();
+                                FromLocation.BinAbsEntry = from_.FromLocation;
+                                FromLocation.Quantity = from_.Quantity;
+                                FromLocation.SerialAndBatchNumbersBaseLine = batch.LineNumBatch;
+                                FromLocation.BinActionType = 2;
+                                FromLocation.BaseLineNumber = line.LineNum;
+                                row.StockTransferLinesBinAllocations.Add(FromLocation);
+                            }
+                        }
+                        foreach (var to_ in GetLocations(connection, guid, line.ItemCode, line.LineNum, batch.LineNumBatch, batch.Batch, 1))
+                        {
+                            if (to_.ToLocation > 0)
+                            {
+                                BinLocation ToLocation = new BinLocation();
+                                ToLocation.BinAbsEntry = to_.ToLocation;
+                                ToLocation.Quantity = to_.Quantity;
+                                ToLocation.SerialAndBatchNumbersBaseLine = batch.LineNumBatch;
+                                ToLocation.BinActionType = 1;
+                                ToLocation.BaseLineNumber = line.LineNum;
+                                row.StockTransferLinesBinAllocations.Add(ToLocation);
+                            }
+                        }
+                    }
+                }
+                return document;
+            }
+            catch (Exception ex)
+            {
+                lg.Registrar(ex, this.GetType().FullName);
+                return new Transfer();
+            }
+        }
         private Transfer BuildDocument(string guid, DocumentTransfer request, IDbConnection connection) {
             try
             {
@@ -244,7 +377,7 @@ namespace WMS.DAO.Service
                 document.DocDate = DateTime.Now.ToString("yyyy-MM-dd");
                 document.FromWarehouse = request.Document.Filler;
                 document.ToWarehouse = toLocation;
-                document.U_Destino = toLocation == whsTransito ? request.Document.ToWhsCode : "";
+                document.U_Destino = request.Document.ToWhsCode != "CICPR" ? whsTransito : "";
                 document.U_OrigenMov = "HH";
                 document.U_UsrHH = "";
                 document.U_FechaMov = DateTime.Now.ToString("yyyy-MM-dd");
@@ -285,7 +418,7 @@ namespace WMS.DAO.Service
                             ToLocation.BinAbsEntry = to_.FromLocation;
                             ToLocation.Quantity = to_.Quantity;
                             ToLocation.SerialAndBatchNumbersBaseLine = batch.LineNumBatch;
-                            ToLocation.BinActionType = 2;
+                            ToLocation.BinActionType = 1;
                             ToLocation.BaseLineNumber = line.LineNum;
                             row.StockTransferLinesBinAllocations.Add(ToLocation);
                         }
@@ -340,7 +473,6 @@ namespace WMS.DAO.Service
                 return new List<DocumentLocation>();
             }
         }
-
         private int GetBaseLineRequest(List<DetailTransferRequest> Detail, string ItemCode) {
             int NumLi = -1;
             foreach (DetailTransferRequest detail in Detail)

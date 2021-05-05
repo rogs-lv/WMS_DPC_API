@@ -18,6 +18,10 @@ namespace WMS.DAO.IService
         List<OpenTransferRequest> OpenTransfersRequests(string warehouseUser);
         DocumentTransfer GetDocumentRequest(string warehouse, string number);
         #endregion
+        #region transfer receipt
+        DocumentTransferReceipt GetDocumentReceipt(string warehouse, int docnum);
+        Response<Transfer> ProcessReceipt(List<Batch> batchs, DocumentTransferReceipt receipt);
+        #endregion
         #region common
         List<Batch> ReadCode(string codebars, string warehouse);
         DefaultLocationWhs LocationWarehouse(string warehouse);
