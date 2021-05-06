@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WMS.Models;
 
 namespace WMS.DAO.IService
@@ -21,6 +17,11 @@ namespace WMS.DAO.IService
         #region transfer receipt
         DocumentTransferReceipt GetDocumentReceipt(string warehouse, int docnum);
         Response<Transfer> ProcessReceipt(List<Batch> batchs, DocumentTransferReceipt receipt);
+        #endregion
+        #region manual
+        Response<List<Warehouse>> ListWarehouses(string warehouseUser);
+        Response<List<Whs_Binlocation>> ListWarehousePiso(string warehouse);
+        Response<Transfer> ProcessManual(List<Batch> batchs, ManualToWhsCode newLocation);
         #endregion
         #region common
         List<Batch> ReadCode(string codebars, string warehouse);

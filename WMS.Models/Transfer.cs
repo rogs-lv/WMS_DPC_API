@@ -115,4 +115,9 @@ namespace WMS.Models
         public List<Batch> batchs { get; set; }
         public DocumentTransferReceipt receipt { get; set; }
     }
+    public class DataManual
+    {
+        public List<Batch> batchs { get; set; }
+        public ManualToWhsCode manual { get; set; }
+    }
 }

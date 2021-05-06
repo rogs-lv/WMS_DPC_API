@@ -184,17 +184,98 @@ namespace WMS.DAO.Service
                 DefaultLocationWhs defaultLocation = connection.Query<DefaultLocationWhs>($"{schema}.\"WMS_BinDeftWarehouse\"(warehouse=>'{receipt.Document.U_Destino}');").FirstOrDefault();
                 guid = Guid.NewGuid();
                 int rowExecute = 0;
+                string warehouse = "TRANSITO";
                 foreach (Batch row in batchs)
                 {
                     rowExecute = connection.Execute(
                         $"{schema}.\"WMS_SaveMovement\"(" +
                         $"ItemCode=>'{row.ItemCode}',From_=>'{row.WhsCode}',To_=>'{(receipt.Document.U_Destino)}'" +
-                        $",Batch=>'{row.DistNumber}',WhsBatch=>'{row.WhsCode}',FromLocation=>''" +
+                        $",Batch=>'{row.DistNumber}',WhsBatch=>'{row.WhsCode}',FromLocation=>'{(row.WhsCode != warehouse ? row.AbsEntry : 0)}'" +
                         $",ToLocation=>'{(defaultLocation != null ? defaultLocation.DftBinAbs.ToString() : "")}',QToLocation=>{row.Quantity},IdGUID=>'{guid.ToString()}')");
 
                 }
                 if (rowExecute > 0)
                     return new Response<Transfer>(BuildReceipt(guid.ToString(), receipt, connection), 0, "");
+                else
+                    return new Response<Transfer>(null, -1, "No se se procesaron registros para el documento");
+            }
+            catch (Exception ex)
+            {
+                lg.Registrar(ex, this.GetType().FullName);
+                return new Response<Transfer>(null, -1, ex.Message);
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    connection.Close();
+                    connection.Dispose();
+                }
+            }
+        }
+        #endregion
+        #region manual
+        public Response<List<Warehouse>> ListWarehouses(string warehouseUser) {
+            IDbConnection connection = dBAdapter.GetConnection();
+            try
+            {
+                var listWarehouse = connection.Query<Warehouse>($"{schema}.\"WMS_WarehouseManual\"(warehouse => '{warehouseUser}', event => 1);").ToList();
+                return new Response<List<Warehouse>>(listWarehouse, 0, "");
+            }
+            catch (Exception ex)
+            {
+                lg.Registrar(ex, this.GetType().FullName);
+                return new Response<List<Warehouse>>(null, -1, ex.Message);
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    connection.Close();
+                    connection.Dispose();
+                }
+            }
+        }
+        public Response<List<Whs_Binlocation>> ListWarehousePiso(string warehouse) {
+            IDbConnection connection = dBAdapter.GetConnection();
+            try
+            {
+                var listWarehousePiso = connection.Query<Whs_Binlocation>($"{schema}.\"WMS_WarehouseManual\"(warehouse => '{warehouse}', event => 2);").ToList();
+                return new Response<List<Whs_Binlocation>>(listWarehousePiso, 0, "");
+            }
+            catch (Exception ex)
+            {
+                lg.Registrar(ex, this.GetType().FullName);
+                return new Response<List<Whs_Binlocation>>(null, -1, ex.Message);
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    connection.Close();
+                    connection.Dispose();
+                }
+            }
+        }
+        public Response<Transfer> ProcessManual(List<Batch> batchs, ManualToWhsCode newLocation) {
+            IDbConnection connection = dBAdapter.GetConnection();
+            Guid guid;
+            try
+            {
+                DefaultLocationWhs defaultLocation = connection.Query<DefaultLocationWhs>($"{schema}.\"WMS_BinDeftWarehouse\"(warehouse=>'{newLocation.toWhsCode}');").FirstOrDefault();
+                guid = Guid.NewGuid();
+                int rowExecute = 0;
+                foreach (Batch row in batchs)
+                {
+                    rowExecute = connection.Execute(
+                        $"{schema}.\"WMS_SaveMovement\"(" +
+                        $"ItemCode=>'{row.ItemCode}',From_=>'{row.WhsCode}',To_=>'{(newLocation.toWhsCode)}'" +
+                        $",Batch=>'{row.DistNumber}',WhsBatch=>'{row.WhsCode}',FromLocation=>'{row.AbsEntry}'" +
+                        $",ToLocation=>'{(defaultLocation != null ? defaultLocation.DftBinAbs.ToString() : "")}',QToLocation=>{row.Quantity},IdGUID=>'{guid.ToString()}')");
+
+                }
+                if (rowExecute > 0)
+                    return new Response<Transfer>(BuildManual(guid.ToString(), batchs[0].WhsCode, newLocation, connection), 0, "");
                 else
                     return new Response<Transfer>(null, -1, "No se se procesaron registros para el documento");
             }
@@ -421,6 +502,74 @@ namespace WMS.DAO.Service
                             ToLocation.BinActionType = 1;
                             ToLocation.BaseLineNumber = line.LineNum;
                             row.StockTransferLinesBinAllocations.Add(ToLocation);
+                        }
+                    }
+                }
+                return document;
+            }
+            catch (Exception ex)
+            {
+                lg.Registrar(ex, this.GetType().FullName);
+                return new Transfer();
+            }
+        }
+        private Transfer BuildManual(string guid, string fromWarehouse, ManualToWhsCode manual, IDbConnection connection) {
+            try
+            {
+                Transfer document = new Transfer();
+
+                document.Series = 0;
+                document.DocDate = DateTime.Now.ToString("yyyy-MM-dd");
+                document.FromWarehouse = fromWarehouse;
+                document.ToWarehouse = manual.toWhsCode;
+                document.U_Destino = "";
+                document.U_OrigenMov = "HH";
+                document.U_UsrHH = "";
+                document.U_FechaMov = DateTime.Now.ToString("yyyy-MM-dd");
+                document.U_HoraMov = DateTime.Now.ToString("HH:mm:ss");
+                //Lines
+                foreach (var line in GetLines(connection, guid))
+                {
+                    TransferLine row = new TransferLine();
+                    row.ItemCode = line.ItemCode;
+                    row.Quantity = line.Quantity;
+                    row.FromWarehouseCode = line.From;
+                    row.WarehouseCode = line.To;
+                    document.StockTransferLines.Add(row);
+
+                    foreach (var batch in GetBatchs(connection, guid, line.ItemCode, line.LineNum))
+                    {
+                        BatchNumbers distNumber = new BatchNumbers();
+                        distNumber.BatchNumber = batch.Batch;
+                        distNumber.Location = line.From;
+                        distNumber.Quantity = batch.Quantity;
+                        distNumber.BaseLineNumber = line.LineNum;
+                        row.BatchNumbers.Add(distNumber);
+                        foreach (var from_ in GetLocations(connection, guid, line.ItemCode, line.LineNum, batch.LineNumBatch, batch.Batch, 2))
+                        {
+                            if (from_.FromLocation > 0)
+                            {
+                                BinLocation FromLocation = new BinLocation();
+                                FromLocation.BinAbsEntry = from_.FromLocation;
+                                FromLocation.Quantity = from_.Quantity;
+                                FromLocation.SerialAndBatchNumbersBaseLine = batch.LineNumBatch;
+                                FromLocation.BinActionType = 2;
+                                FromLocation.BaseLineNumber = line.LineNum;
+                                row.StockTransferLinesBinAllocations.Add(FromLocation);
+                            }
+                        }
+                        foreach (var to_ in GetLocations(connection, guid, line.ItemCode, line.LineNum, batch.LineNumBatch, batch.Batch, 1))
+                        {
+                            if (to_.ToLocation > 0)
+                            {
+                                BinLocation ToLocation = new BinLocation();
+                                ToLocation.BinAbsEntry = to_.ToLocation;
+                                ToLocation.Quantity = to_.Quantity;
+                                ToLocation.SerialAndBatchNumbersBaseLine = batch.LineNumBatch;
+                                ToLocation.BinActionType = 1;
+                                ToLocation.BaseLineNumber = line.LineNum;
+                                row.StockTransferLinesBinAllocations.Add(ToLocation);
+                            }
                         }
                     }
                 }

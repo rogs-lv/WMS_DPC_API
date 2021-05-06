@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
@@ -88,6 +84,33 @@ namespace WMS.Controllers
         public IHttpActionResult ProcessReceipt([FromBody] DataReceipt data)
         {
             var response = transferService.ProcessReceipt(data.batchs, data.receipt);
+            return Ok(response);
+        }
+        #endregion
+        #region manual
+        [HttpGet]
+        [Route("ListWarehouse")]
+        [ResponseType(typeof(Response<List<Warehouse>>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public IHttpActionResult ListWarehouse([FromUri] string warehouse) {
+            var response = transferService.ListWarehouses(warehouse);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("ListWarehousePiso")]
+        [ResponseType(typeof(Response<List<Warehouse>>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public IHttpActionResult ListWarehousePiso([FromUri] string warehouse) {
+            var response = transferService.ListWarehousePiso(warehouse);
+            return Ok(response);
+        }
+        [HttpPost]
+        [Route("ProcessManual")]
+        [ResponseType(typeof(Response<Transfer>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public IHttpActionResult ProcessManual([FromBody] DataManual data) {
+            object response = transferService.ProcessManual(data.batchs, data.manual);
             return Ok(response);
         }
         #endregion

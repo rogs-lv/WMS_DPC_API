@@ -18,4 +18,8 @@ namespace WMS.Models
         public decimal QToLocation { get; set; }
         public string IdGUID { get; set; }
     }
+    public class ManualToWhsCode {
+        public string toWhsCode { get; set; }
+        public string toBinLocation { get; set; }
+    }
 }
