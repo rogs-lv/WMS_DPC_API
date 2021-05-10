@@ -71,6 +71,7 @@ namespace WMS.App_Start
             kernel.Bind<IFolioService>().To<FolioService>();
             kernel.Bind<IInventoryService>().To<InventoryService>();
             kernel.Bind<ITransferService>().To<TransferService>();
+            kernel.Bind<IShippingService>().To<ShippingService>();
         }
     }
 }
