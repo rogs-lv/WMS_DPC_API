@@ -78,6 +78,7 @@
     <Compile Include="IService\IProfileService.cs" />
     <Compile Include="IService\IQualityService.cs" />
     <Compile Include="IService\IReadCodebars.cs" />
+    <Compile Include="IService\IShipmentService.cs" />
     <Compile Include="IService\IShippingService.cs" />
     <Compile Include="IService\ITransferService.cs" />
     <Compile Include="IService\IValidationsService.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Service\InventoryService.cs" />
     <Compile Include="Service\ProfileService.cs" />
     <Compile Include="Service\QualityService.cs" />
+    <Compile Include="Service\ShipmentService.cs" />
     <Compile Include="Service\ShippingService.cs" />
     <Compile Include="Service\TransferService.cs" />
     <Compile Include="Service\ValidationService.cs" />
