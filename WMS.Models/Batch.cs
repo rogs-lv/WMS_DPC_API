@@ -17,6 +17,8 @@ namespace WMS.Models
         public decimal Quantity { get; set; }
         public string WhsCode { get; set; }
         public int Status { get; set; }
+        public int ItmsGrpCod { get; set; }
+        public string U_stFolio { get; set; }
     }
     public class BatchsInLocation
     {

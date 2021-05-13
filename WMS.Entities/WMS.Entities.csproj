@@ -64,6 +64,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DocumentBatch.cs" />
+    <Compile Include="DocumentLine.cs" />
+    <Compile Include="DocumentLocation.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

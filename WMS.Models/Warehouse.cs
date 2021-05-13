@@ -18,4 +18,10 @@ namespace WMS.Models
         public string BinCode { get; set; }
         public string DftBinEnfd { get; set; }
     }
+
+    public class Whs_Binlocation
+    {
+        public int AbsEntry { get; set; }
+        public string BinCode { get; set; }
+    }
 }
