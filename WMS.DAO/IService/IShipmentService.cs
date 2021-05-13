@@ -14,5 +14,6 @@ namespace WMS.DAO.IService
         ValidateEFEEM isValidEFEEM(string batch, int type);
         List<Batch> ReadCode(string codebars, string warehouse);
         int UpdateBatchs(string[] batchs, string status, int docnum, int docentry);
+        Response<List<TransferShippment>> processShipment(List<shipmentProcess> data);
     }
 }

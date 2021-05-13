@@ -58,6 +58,27 @@ namespace WMS.Models
             StockTransferLines = new List<TransferLine>();
         }
     }
+    public class TransferShippment
+    {
+        public int Series { get; set; }
+        public string DocDate { get; set; }
+        public string FromWarehouse { get; set; }
+        public string ToWarehouse { get; set; }
+        public string U_Destino { get; set; }
+        public string U_OrigenMov { get; set; }
+        public string U_UsrHH { get; set; }
+        public string U_FechaMov { get; set; }
+        public string U_HoraMov { get; set; }
+        public string U_Remisionado { get; set; }
+        public string Comments { get; set; }
+        public string U_ItemRem { get; set; }
+        public decimal U_ItemRemQty { get; set; }
+        public List<TransferLine> StockTransferLines { get; set; }
+        public TransferShippment()
+        {
+            StockTransferLines = new List<TransferLine>();
+        }
+    }
     public class OpenTransferRequest
     {
         public int DocEntry { get; set; }

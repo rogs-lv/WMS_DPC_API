@@ -35,4 +35,22 @@ namespace WMS.Models
         public string OC { get; set; }
         public string GR { get; set; }
     }
+
+    public class shipmentProcess
+    {
+        public string DistNumber { get; set; }
+        public string BinCode { get; set; }
+        public int AbsEntry { get; set; }
+        public int AbsEntryT { get; set; }
+        public string ItemCode { get; set; }
+        public int Quantity { get; set; }
+        public string FromWhsCode { get; set; }
+        public string ToWhsCode { get; set; }
+        public string U_stFolio { get; set; }
+        public int DocNum { get; set; }
+        public int DocEntry { get; set; }
+        public int LineNum { get; set; }
+        public string OC { get; set; }
+        public string GR { get; set; }
+    }
 }

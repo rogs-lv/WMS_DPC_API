@@ -32,6 +32,7 @@ namespace WMS.Controllers
             var response = shippingService.GetListPartner();
             return Ok(response);
         }
+        
         [HttpGet]
         [Route("GetNumberShipment")]
         [ResponseType(typeof(Response<List<Shipment>>))]
@@ -86,5 +87,15 @@ namespace WMS.Controllers
             var response = shipmentService.UpdateBatchs(batchs, status, docnum, docentry);
             return Ok(new Response<int>(response, 0, ""));
         }
+
+        [HttpPost]
+        [Route("ProcessShipment")]
+        [ResponseType(typeof(Response<List<TransferShippment>>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public IHttpActionResult ProcessShipment([FromBody] List<shipmentProcess> data) {
+            var response = shipmentService.processShipment(data);
+            return Ok(response);
+        }
+
     }
 }
