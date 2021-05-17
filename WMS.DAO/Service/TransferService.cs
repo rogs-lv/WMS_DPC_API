@@ -396,6 +396,7 @@ namespace WMS.DAO.Service
                 foreach (var line in GetLines(connection, guid))
                 {
                     TransferLine row = new TransferLine();
+                    row.LineNum = line.LineNum;
                     row.ItemCode = line.ItemCode;
                     row.Quantity = line.Quantity;
                     row.FromWarehouseCode = line.From;
@@ -466,6 +467,7 @@ namespace WMS.DAO.Service
                 //Lines
                 foreach (var line in GetLines(connection, guid)) {
                     TransferLine row = new TransferLine();
+                    row.LineNum = line.LineNum;
                     row.ItemCode = line.ItemCode;
                     row.Quantity = line.Quantity;
                     row.FromWarehouseCode = line.From;
@@ -531,6 +533,7 @@ namespace WMS.DAO.Service
                 foreach (var line in GetLines(connection, guid))
                 {
                     TransferLine row = new TransferLine();
+                    row.LineNum = line.LineNum;
                     row.ItemCode = line.ItemCode;
                     row.Quantity = line.Quantity;
                     row.FromWarehouseCode = line.From;

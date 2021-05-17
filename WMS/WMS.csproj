@@ -304,6 +304,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\ServiceDPC.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WMS.DAO\WMS.DAO.csproj">

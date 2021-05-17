@@ -201,6 +201,7 @@ namespace WMS.DAO.Service
                     document.U_ItemRemQty = line.Quantity;
 
                     TransferLine row = new TransferLine();
+                    row.LineNum = line.LineNum;
                     row.ItemCode = line.ItemCode;
                     row.Quantity = line.Quantity;
                     row.FromWarehouseCode = line.From;
