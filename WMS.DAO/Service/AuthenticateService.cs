@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WMS.DAO.IService;
+using WMS.DAO.Utility;
 using WMS.Entities;
 using WMS.Models;
 using WMS.Token;
@@ -19,23 +20,33 @@ namespace WMS.DAO.Service
         IDBAdapter dBAdapter;
         Log lg;
         private readonly string schema = string.Empty;
+        Encrypt utilityEncrypt;
         public AuthenticateService()
         {
             dBAdapter = DBFactory.GetDefaultAdapater();
             lg = Log.getIntance();
             schema = ConfigurationManager.AppSettings["schema"];
+            utilityEncrypt = new Encrypt();
         }
 
         public AuthenticateResponse Authenticate(AuthenticateRequest credential)
         {
             IDbConnection connection = dBAdapter.GetConnection();
+            string token = string.Empty;
             try
             {
                 var user = connection.Query<User>($"{schema}.\"WMS_Login\"( user_ => '{credential.Username}', password_ => '{credential.Password}'); ").FirstOrDefault();
                 if (user == null) return null;
 
-                var token = TokenGenerator.GenerateTokenJwt(user);
-                return new AuthenticateResponse(user, token);
+                string passDecrypt = utilityEncrypt.DescryPassword(user.Password);
+                if (credential.Password == passDecrypt)
+                {
+                    token = TokenGenerator.GenerateTokenJwt(user);
+                    return new AuthenticateResponse(user, token);
+                }
+                else {
+                    return null;
+                }
             }
             catch (Exception ex)
             {
