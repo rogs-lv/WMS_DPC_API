@@ -238,6 +238,7 @@
     <Compile Include="Controllers\FolioController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
+    <Compile Include="Controllers\LoadUserController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\QualityController.cs" />
     <Compile Include="Controllers\ReadCodebarController.cs" />

@@ -73,6 +73,7 @@ namespace WMS.App_Start
             kernel.Bind<ITransferService>().To<TransferService>();
             kernel.Bind<IShippingService>().To<ShippingService>();
             kernel.Bind<IShipmentService>().To<ShipmentService>();
+            kernel.Bind<ILoadUserService>().To<LoadUserService>();
         }
     }
 }

@@ -100,6 +100,7 @@
     <Compile Include="Batch.cs" />
     <Compile Include="DefaultLocationWhs.cs" />
     <Compile Include="HanaConnectResponse.cs" />
+    <Compile Include="LoadUser.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="ModuleResponse.cs" />
     <Compile Include="Movement.cs" />
