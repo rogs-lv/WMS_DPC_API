@@ -12,4 +12,11 @@ namespace WMS.Models
         public string CardName { get; set; }
         public int U_GrpItems { get; set; }
     }
+    public class PartnerADSL
+    {
+        public string CardCode { get; set; }
+        public string CardName { get; set; }
+        public int ListNum { get; set; }
+        public string ListName { get; set; }
+    }
 }

@@ -44,7 +44,8 @@ namespace WMS.DAO.Service
                     token = TokenGenerator.GenerateTokenJwt(user);
                     return new AuthenticateResponse(user, token);
                 }
-                else {
+                else
+                {
                     return null;
                 }
             }
