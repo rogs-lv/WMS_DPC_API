@@ -10,5 +10,7 @@ namespace WMS.DAO.IService
     public interface ILoadUserService
     {
         Response<int> SaveUsers(List<LoadUser> data);
+        Response<int> SaveModule(List<LoadModule> data, int option);
+        Response<int> SaveOtherConfiguration(List<LoadModule> data, int option);
     }
 }

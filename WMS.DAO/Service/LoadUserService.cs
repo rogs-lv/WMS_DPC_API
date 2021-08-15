@@ -52,5 +52,69 @@ namespace WMS.DAO.Service
                 }
             }
         }
+        /// <summary>
+        /// Insert modules and sub modules
+        /// </summary>
+        /// <param name="data">rows or data of query</param>
+        /// <param name="option">3 for insert module and submodules</param>
+        /// <returns></returns>
+        public Response<int> SaveModule(List<LoadModule> data, int option)
+        {
+            IDbConnection connection = dBAdapter.GetConnection();
+            int rowsInserts = 0;
+            try
+            {
+                foreach (LoadModule row in data)
+                {
+                    rowsInserts += connection.Execute($"{schema}.\"WMS_CreateProfiles_Modules\"(opt=>{option}, idUser=>'{row.jobTitle.Trim()}', idModule=>'{row.IdModule.Trim()}', statusMod=>'{row.StatusModule.Trim()}');");
+                }
+                return new Response<int>(rowsInserts, 0, "");
+            }
+            catch (Exception ex)
+            {
+                lg.Registrar(ex, this.GetType().FullName);
+                return new Response<int>(-1, -1, ex.Message); ;
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    connection.Close();
+                    connection.Dispose();
+                }
+            }
+        }
+        /// <summary>
+        /// Insert additional settings
+        /// </summary>
+        /// <param name="data">rows or data of query</param>
+        /// <param name="option">option 4 to insert additional setting</param>
+        /// <returns></returns>
+        public Response<int> SaveOtherConfiguration(List<LoadModule> data, int option)
+        {
+            IDbConnection connection = dBAdapter.GetConnection();
+            int rowsInserts = 0;
+            try
+            {
+                foreach (LoadModule row in data)
+                {
+                    rowsInserts += connection.Execute($"{schema}.\"WMS_CreateProfiles_Modules\"(opt=>{option}, idUser=>'{row.jobTitle.Trim()}', idConfig=>'{row.IdModule.Trim()}', statusConfig=>'{row.StatusModule.Trim()}');");
+                }
+                return new Response<int>(rowsInserts, 0, "");
+            }
+            catch (Exception ex)
+            {
+                lg.Registrar(ex, this.GetType().FullName);
+                return new Response<int>(-1, -1, ex.Message); ;
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    connection.Close();
+                    connection.Dispose();
+                }
+            }
+        }
     }
 }

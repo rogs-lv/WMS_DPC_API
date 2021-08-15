@@ -11,7 +11,7 @@ using WMS.Models;
 
 namespace WMS.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [RoutePrefix("wms/loadUser")]
     public class LoadUserController : ApiController
     {
@@ -24,9 +24,31 @@ namespace WMS.Controllers
         [Route("SaveUsers")]
         [ResponseType(typeof(Response<int>))]
         [EnableCors(origins: "*", headers: "*", methods: "*")]
-        [ApiExplorerSettings(IgnoreApi = true)]
+        //[ApiExplorerSettings(IgnoreApi = true)]
         public IHttpActionResult SaveUsers([FromBody] List<LoadUser> data) {
             var response = loadUserService.SaveUsers(data);
+            return Ok(response);
+        }
+        
+        [HttpPost]
+        [Route("SaveModules")]
+        [ResponseType(typeof(Response<int>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        //[ApiExplorerSettings(IgnoreApi = true)]
+        public IHttpActionResult SaveModules([FromBody] List<LoadModule> data, [FromUri]int option)
+        {
+            var response = loadUserService.SaveModule(data, option);
+            return Ok(response);
+        }
+        
+        [HttpPost]
+        [Route("SaveAdditionalConfiguration")]
+        [ResponseType(typeof(Response<int>))]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        //[ApiExplorerSettings(IgnoreApi = true)]
+        public IHttpActionResult SaveAdditionalConfiguration([FromBody] List<LoadModule> data, [FromUri] int option)
+        {
+            var response = loadUserService.SaveOtherConfiguration(data, option);
             return Ok(response);
         }
     }

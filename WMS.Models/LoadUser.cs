@@ -15,4 +15,12 @@ namespace WMS.Models
         public string U_PassWMS { get; set; }
         public string WhsCode { get; set; }
     }
+
+    public class LoadModule
+    {
+        public string jobTitle { get; set; }
+        public string IdModule { get; set; }
+        public string StatusModule { get; set; }
+
+    }
 }
