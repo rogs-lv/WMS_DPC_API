@@ -79,7 +79,7 @@ namespace WMS.DAO.Service
                 Match match = regex.Match(bincode);
                 Location locationFromBinCode;
                 if (match.Success)
-                    locationFromBinCode = connection.Query<Location>($"{schema}.\"WMS_AbsEntryFromBinCode\"(warehouse => '{warehouse}', bincode => '', type_ => 'piso');").FirstOrDefault();
+                    locationFromBinCode = connection.Query<Location>($"{schema}.\"WMS_AbsEntryFromBinCode\"(warehouse => '{warehouse}', bincode => '{bincode}', type_ => 'piso');").FirstOrDefault();
                 else
                     locationFromBinCode = connection.Query<Location>($"{schema}.\"WMS_AbsEntryFromBinCode\"(warehouse => '{warehouse}', bincode => '{bincode}', type_ => 'nopiso');").FirstOrDefault();
                 return locationFromBinCode;
